@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Added
+{% endblock %}
+
+{% block main %}
+    <script>
+        // Removes a video on click of its coresponding reomve button
+        function remove(number) {
+
+            // Returns the videos number in the sql database by pulling a hidden div underneath it holding its number value
+            $.ajax({
+                data : {added_number : number},
+                type:'POST',
+                url:'/removeV'
+            })
+            // Takes returned added table, and rebuilds the new added table, then updates it
+            .done(function(data) {
+                let temp = "";
+                for(var i = 0; i < data.length; i++) {
+                    temp += "<tr><th style='display: none' class='number'>";
+                    temp += data[i].number;
+                    temp += "</th><th class='name'>";
+                    temp += data[i].name;
+                    temp += "</th><th class='durration'>";
+                    temp += data[i].durration;
+                    temp += "</th><th><button onclick='nameChange(parseInt($(this).parent().siblings(\".number\").html()))'>Submit</button></th><th><button class='remove' onclick='remove($(this).parent().siblings(\".number\").html())'> remove </button></th></tr>";
+                }
+                document.querySelector('#tableElements').innerHTML = temp;
+            });
+        }
+
+        // Changes the name of a video to an inputs value when coresponding button is pressed
+        function nameChange(number)
+        {
+
+            // Pulls new name
+            let name = document.querySelector('#newName').value;
+
+            // Routes to /chosen with a name and number value
+            $.ajax({
+                data : {newName : name, number : number},
+                type : 'POST',
+                url : '/chosen'
+            })
+
+            // Takes returned added table, and rebuilds the new added table, then updates it
+            .done(function(data) {
+                let temp = "";
+                for(var i = 0; i < data.length; i++) {
+                    temp += "<tr><th style='display: none' class='number'>";
+                    temp += data[i].number;
+                    temp += "</th><th class='name'>";
+                    temp += data[i].name;
+                    temp += "</th><th class='durration'>";
+                    temp += data[i].durration;
+                    temp += "</th><th><button onclick='nameChange(parseInt($(this).parent().siblings(\".number\").html()))'>Submit</button></th><th><button class='remove' onclick='remove($(this).parent().siblings(\".number\").html())'> remove </button></th></tr>";
+                }
+                document.querySelector('#tableElements').innerHTML = temp;
+            });
+        }
+
+    </script>
+
+    <div id = "editTable" class = "chosen">
+
+        <!--New name input-->
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-lg">New Name</span>
+            </div>
+            <input id="newName" name="name" placeholder="New Name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+        </div>
+
+        <!--Builds table-->
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Durration</th>
+                    <th scopt="col">Submit</th>
+                    <th scope="col">Remove</th>
+                </tr>
+            </thead>
+            <tbody id = "tableElements">
+                {% for row in added %}
+                    <tr>
+                            <th style="display: none" class="number">
+                                {{ row.number }}
+                            </th>
+                            <th class="name">
+                                {{ row.name }}
+                            </th>
+                            <th class="durration">
+                                {{ row.durration }}
+                            </th>
+                            <th>
+                                <button onclick='nameChange(parseInt($(this).parent().siblings(".number").html()))'>
+                                    Submit
+                                </button>
+                            </th>
+                            <th>
+                                <button onclick='remove($(this).parent().siblings(".number").html())'>
+                                    remove
+                                </button>
+                            </th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}

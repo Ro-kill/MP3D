@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Download
+{% endblock %}
+
+{% block main %}
+
+    <!--Builds style for loading div-->
+    <style media="screen">
+
+        .loader {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,255,0.3) 50%, rgba(255,0,0,0.3) 50%);
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .error
+        {
+            display: none;
+        }
+
+        .loader > img {
+            width: 100px;
+        }
+
+    </style>
+
+    <div class="alert alert-danger error" role="alert">
+        An error occured while downloading your files!
+    </div>
+
+    <!--Loading div-->
+    <div class="loader">
+        <div style="height: 80px" class="alert alert-primary" role="alert">
+            Your audio files are downloading. Please do not exit or refresh the tab. <br>
+            This may take a whild depending on content being downloaded.
+        </div>
+        <img src="/static/redBlueLoading.gif">
+    </div>
+
+    <div id = "editTable" class = "chosen">
+
+        <!--Builds table-->
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Durration</th>
+                </tr>
+            </thead>
+            <tbody id = "tableElements">
+                {% for row in added %}
+                    <tr>
+
+                            <th style="display: none" class="number">
+                                {{ row.number }}
+                            </th>
+                            <th class="name">
+                                {{ row.name }}
+                            </th>
+                            <th class="durration">
+                                {{ row.durration }}
+                            </th>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <button id = "download" class="download">
+        Download
+    </button>
+
+    <script>
+
+    $('.loader').hide();
+
+    // Routes to /download which downloads all songs in the sql table, then delets all rows
+    $(".download").click(function() {
+
+        // Shows loading div
+        $('.loader').show();
+
+        $.ajax({
+
+            data : {},
+            type:'POST',
+            url:'/download',
+
+            success: function(data) {
+
+                // Hides loading div
+                $('.loader').hide();
+                document.querySelector('#tableElements').innerHTML = "";
+
+            },
+
+            error: function(data) {
+
+                // Hides loading div
+                $('.loader').hide();
+                $('.error').show();
+
+                }
+            })
+        });
+
+    </script>
+
+{% endblock %}

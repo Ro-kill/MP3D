@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <script>
+
+        // Routs to remove route which removes video with coresponding number
+        function remove(number) {
+            $.ajax({
+                data : {added_number : number},
+                type:'POST',
+                url:'/removeV'
+            })
+
+            // Creates and loads new data after delete
+            .done(function(data) {
+                let temp = "";
+                for(var i = 0; i < data.length; i++) {
+                    temp += "<tr><th style='display: none' class='number'>";
+                    temp += data[i].number;
+                    temp += "</th><th class='name'>";
+                    temp += data[i].name;
+                    temp += "</th><th><button class='remove' onclick='remove($(this).parent().siblings(\".number\").html())'> remove </button></th></tr>";
+                }
+                document.querySelector('#tableElements').innerHTML = temp;
+            });
+        }
+
+    </script>
+
+    <!--Entire Homepage-->
+    <div class="index">
+
+        <!--Search bar, and results table-->
+        <div class="search">
+
+            <div class="search_bar">
+                <form action="/" method="POST" class="search_input">
+                    <div class="form-group search_input">
+                        <input autocomplete="off" autofocus class="form-control" name="key_word" placeholder="Search" type="text">
+                    </div>
+                    <button class="btn btn-primary search_button" type="submit">Search</button>
+                </form>
+            </div>
+
+            <!--Updates to info-->
+            <div class="results">
+                {% for row in info %}
+                    <div class="alert alert-primary" role="alert">
+                        <p class = "info">
+                            {{ row[1] }} <br> Durration: {{ row[2] }}
+                        </p>
+                        <p>
+                            Likes: {{ row[3] }} Dislikes: {{ row[4] }}
+                        </p>
+                        <button class="btn btn-success play"> Play </button>
+                        <button class="btn btn-success add">
+                            add
+                        </button>
+                        <div class="numberHolder" style="display: none;">
+                            {{ row[5] }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+
+
+        </div>
+
+        <!--Holds all chosen songs-->
+        <div id = "chosenTable" class = "chosen">
+            <table class="table table-dark songs">
+                <thead>
+                    <tr>
+                        <th scope="col">Added</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+                <tbody id = "tableElements">
+                    {% for row in added %}
+                        <tr>
+                            <th style="display: none" class="number">
+                                {{ row.number }}
+                            </th>
+                            <th class="name">
+                                {{ row.name }}
+                            </th>
+                            <th>
+                                <button class='remove' onclick='remove($(this).parent().siblings(".number").html())'>
+                                    remove
+                                </button>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+
+        // Opens new tab with url of the song chosen
+        $(".play").click(function() {
+
+            // Pulls number and passes it to play route
+            let number = $(this).siblings(".numberHolder").html()
+            $.ajax({
+                data : {video_number : number},
+                type:'POST',
+                url:'/play'
+            })
+
+            // Takes returned url and loads it in a new tab
+            .done(function(data) {
+                window.open(
+                    "https://www.youtube.com/watch?v=" + data.id,
+                    '_blank'
+                );
+            })
+        })
+
+        // Adds a chosen video to the added database
+        $(".add").click(function() {
+
+            // Pulls chosen videos number and passes it to append
+            let number = this.nextElementSibling.innerHTML;
+            $.ajax({
+                data : {video_number : number},
+                type:'POST',
+                url:'/appendV'
+            })
+
+            // Updates and uploads new "added" data
+            .done(function(data) {
+                let temp = "";
+                for(var i = 0; i < data.length; i++) {
+                    temp += "<tr><th style='display: none' class='number'>";
+                    temp += data[i].number;
+                    temp += "</th><th class='name'>";
+                    temp += data[i].name;
+                    temp += "</th><th><button class='remove' onclick='remove($(this).parent().siblings(\".number\").html())'> remove </button></th></tr>";
+                }
+                document.querySelector('#tableElements').innerHTML = temp;
+            });
+        })
+
+    </script>
+
+{% endblock %}

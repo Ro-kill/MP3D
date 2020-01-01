@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <!--Notifys the user that their mac id was viewable accessed-->
+    <div class="alert alert-danger" role="alert">
+        <h1>No mac address found</h1>
+        <p>We were unable to find a mac address for your computer. <br>
+        Our system requires your mac address to associate your chosen videos with your account. <br>
+        Please allow us access to your mac address and try again</p>
+        <a href="/" class="alert-link">Homepage</a>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <!--Notifys the user that their mac id was viewable accessed-->
+    <div class="alert alert-danger" role="alert">
+        <h1>Requests Maxed</h1>
+        <p>Youtube api requests have been maxed out.<br>
+        Please try again tomorrow when they reset </p>
+        <a href="/" class="alert-link">Homepage</a>
+    </div>
+
+{% endblock %}
