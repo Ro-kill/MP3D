@@ -1,18 +1,21 @@
-#Demo
+# Demo
 
 You can see a demo of this site being used here:  https://youtu.be/ijg28Rrjr7Q 
 
-#Installation
+# Installation
 
 In order this website uses youtube_dl, and for that reason you must install it.
 In terminal, execute the following:
+
     pip install youtube-dl --user
+    
 Make sure youtube-dl is up to date with pip install --upgrade youtube-dl
 
 After installing youtube-dl you will still need to install one more package that did not come with youtube-dl.
 If you recieve the error: "ffprobe/avprobe and ffmpeg/avconv not found. Please install one." It is because
 you are missing this package.
 In the terminal, execute the following:
+
     sudo apt-get install ffmpeg
 
 Now you should have everything you need to run the website.
@@ -28,7 +31,7 @@ I have encountered some errors with the ide not being able to open all mp3 files
 downloaded content under 10 minunits. If you would like to download something more than 10 minunits and encounter
 this error, export the mp3 first, and then play it.
 
-#Description
+# Description
 
 MP3D is a flask web interface that allows users to download audio files of coresponding youtube videos with ease.
 There are 3 pages that can be navigated among: Choose, Edit, and Download.
@@ -47,7 +50,7 @@ download button, and the donwload will commence. Durring the download process, t
 locked to prevent download interruption All mp3 files downloaded will appear in a folder with a name coresponding
 to the users mac address.
 
-#Options
+# Options
 
 The ammount of search results is easily changable, as the helpers.py function lookup takes two inputs. The first is
 Word you would like to search, and the second is the amount of results you would like. Results can be no larger than
